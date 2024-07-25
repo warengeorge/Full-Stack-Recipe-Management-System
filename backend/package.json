@@ -1,0 +1,33 @@
+{
+  "name": "backend",
+  "version": "1.0.0",
+  "description": "",
+  "main": "server.js",
+  "type": "module",
+  "scripts": {
+    "start": "nodemon server"
+  },
+  "keywords": [
+    "express",
+    "node",
+    "backend"
+  ],
+  "author": "Tamunomiebi George",
+  "license": "ISC",
+  "dependencies": {
+    "@aws-sdk/client-s3": "^3.617.0",
+    "express": "^4.19.2",
+    "express-validator": "^7.1.0",
+    "joi": "^17.13.3",
+    "mongodb": "^6.8.0",
+    "mongoose": "^8.5.1",
+    "multer": "^1.4.5-lts.1",
+    "redis": "^4.6.15"
+  },
+  "devDependencies": {
+    "eslint": "^9.7.0",
+    "eslint-config-prettier": "^9.1.0",
+    "nodemon": "^3.1.4",
+    "prettier": "^3.3.3"
+  }
+}
