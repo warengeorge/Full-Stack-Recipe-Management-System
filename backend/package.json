@@ -1,7 +1,7 @@
 {
-  "name": "backend",
+  "name": "backend-recipe-app",
   "version": "1.0.0",
-  "description": "",
+  "description": "nodejs api",
   "main": "server.js",
   "type": "module",
   "scripts": {
@@ -9,7 +9,8 @@
     "test": "jest",
     "test-w": "jest --watchAll",
     "lint": "eslint .",
-    "format": "prettier --write ."
+    "format": "prettier --write .",
+    "swagger-autogen": "node ./swagger.js"
   },
   "keywords": [
     "express",
@@ -22,13 +23,17 @@
     "@aws-sdk/client-s3": "^3.617.0",
     "babel-jest": "^29.7.0",
     "body-parser": "^1.20.2",
+    "dotenv": "^16.4.5",
     "express": "^4.19.2",
     "express-validator": "^7.1.0",
     "joi": "^17.13.3",
     "mongodb": "^6.8.0",
     "mongoose": "^8.5.1",
     "multer": "^1.4.5-lts.1",
-    "redis": "^4.6.15"
+    "redis": "^4.6.15",
+    "swagger-autogen": "^2.23.7",
+    "swagger-jsdoc": "^6.2.8",
+    "swagger-ui-express": "^5.0.1"
   },
   "devDependencies": {
     "@types/supertest": "^6.0.2",

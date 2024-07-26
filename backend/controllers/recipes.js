@@ -11,6 +11,13 @@ if (redisConnected) {
 
 // Get a list of paginated recipes
 const getRecipes = async (req, res) => {
+  /* #swagger.tags = ['Recipes'] */
+  /* #swagger.description = 'Get a list of paginated recipes' */
+  /* #swagger.parameters['page'] = { description: 'Page number', type: 'integer' } */
+  /* #swagger.parameters['limit'] = { description: 'Number of items per page', type: 'integer' } */
+  /* #swagger.responses[200] = { description: 'List of recipes' } */
+  /* #swagger.responses[500] = { description: 'Server error' } */
+  /*#swagger.summary = 'Get a list of paginated recipes' */
   const page = parseInt(req.query.page) || 1;
   const limit = parseInt(req.query.limit) || 10;
   const start = (page - 1) * limit;
@@ -39,6 +46,14 @@ const getRecipes = async (req, res) => {
 
 // Get a single recipe by ID
 const getRecipe = async (req, res) => {
+  /* #swagger.tags = ['Recipes'] */
+  /* #swagger.description = 'Get a single recipe by ID' */
+  /* #swagger.parameters['id'] = { description: 'Recipe ID', type: 'string' } */
+  /* #swagger.responses[200] = { description: 'Recipe details' } */
+  /* #swagger.responses[404] = { description: 'Recipe not found' } */
+  /* #swagger.responses[500] = { description: 'Server error' } */
+  /*#swagger.summary = 'Get a single recipe by ID' */
+
   const { id } = req.params;
   try {
     let recipe = await redisClient.get(id);
@@ -59,6 +74,14 @@ const getRecipe = async (req, res) => {
 
 // Create a new recipe
 const createRecipe = async (req, res) => {
+  /* #swagger.tags = ['Recipes'] */
+  /* #swagger.description = 'Create a new recipe' */
+  /* #swagger.parameters['body'] = { description: 'Recipe details', type: 'object' } */
+  /* #swagger.responses[201] = { description: 'Created recipe' } */
+  /* #swagger.responses[400] = { description: 'Invalid recipe details' } */
+  /* #swagger.responses[500] = { description: 'Server error' } */
+  /*#swagger.summary = 'Create a new recipe' */
+  
   const { error, value } = recipeSchema.validate(req.body);
   if (error) {
     return res.status(400).json({ message: error.details[0].message });
@@ -86,6 +109,15 @@ const createRecipe = async (req, res) => {
 
 // Update a recipe by ID
 const updateRecipe = async (req, res) => {
+  /* #swagger.tags = ['Recipes'] */
+  /* #swagger.description = 'Update a recipe by ID' */
+  /* #swagger.parameters['id'] = { description: 'Recipe ID', type: 'string' } */
+  /* #swagger.parameters['body'] = { description: 'Recipe details', type: 'object' } */
+  /* #swagger.responses[200] = { description: 'Updated recipe' } */
+  /* #swagger.responses[404] = { description: 'Recipe not updated' } */
+  /* #swagger.responses[500] = { description: 'Server error' } */
+  /*#swagger.summary = 'Update a recipe by ID' */
+
   const { error, value } = updateRecipeSchema.validate(req.body);
   if (error) {
     return res.status(400).send(error.details[0].message);
@@ -107,6 +139,14 @@ const updateRecipe = async (req, res) => {
 
 // Delete a recipe by ID
 const deleteRecipe = async (req, res) => {
+  /* #swagger.tags = ['Recipes'] */
+  /* #swagger.description = 'Delete a recipe by ID' */
+  /* #swagger.parameters['id'] = { description: 'Recipe ID', type: 'string' } */
+  /* #swagger.responses[200] = { description: 'Recipe deleted' } */
+  /* #swagger.responses[404] = { description: 'Recipe not found' } */
+  /* #swagger.responses[500] = { description: 'Server error' } */
+  /*#swagger.summary = 'Delete a recipe by ID' */
+
   const id = req.params.id;
   try {
     const result = await Recipe.findByIdAndDelete(id).exec();
