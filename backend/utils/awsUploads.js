@@ -35,8 +35,7 @@ export const upload = multer({
 
 export const uploadImage = async (id, image) => {
   if (!image) throw new Error('No image provided');
-  const recipe = await Recipe.findById(id).exec();
-  const folderKey = `recipes/${recipe.createdAt}/${image.originalname}`;
+  const folderKey = `recipes/${id}/${image.originalname}`;
   const params = {
     Bucket: bucketName,
     Key: folderKey,

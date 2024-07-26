@@ -1,7 +1,7 @@
 import express from 'express';
 import bodyParser from 'body-parser';
 import { connectDB } from './config/db.js';
-import recipeRouter from './recipeController.js';
+import recipeRouter from './routes/recipes.js';
 
 const app = express();
 const port = process.env.PORT || 3000;

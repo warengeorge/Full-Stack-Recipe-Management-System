@@ -5,5 +5,11 @@ export const recipeSchema = Joi.object({
   ingredients: Joi.array().items(Joi.string()).required(),
   instructions: Joi.array().items(Joi.string()).required(),
   image: Joi.string(),
-  createdAt: Joi.date().required()
+});
+
+export const updateRecipeSchema = Joi.object({
+  title: Joi.string(),
+  ingredients: Joi.array().items(Joi.string()),
+  instructions: Joi.array().items(Joi.string()),
+  image: Joi.string(),
 });

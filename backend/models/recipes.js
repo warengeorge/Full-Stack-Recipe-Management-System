@@ -17,12 +17,9 @@ const recipeSchema = new Schema({
   image: {
     type: String,
     required: false
-  },
-  createdAt: {
-    type: Date,
-    required: true,
-    default: Date.now
   }
+}, {
+  timestamps: true
 });
 
 export default model('Recipe', recipeSchema);

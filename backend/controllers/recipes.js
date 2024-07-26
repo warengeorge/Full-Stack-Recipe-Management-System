@@ -1,20 +1,11 @@
 import Recipe from '../models/recipes.js';
 import redis from 'redis';
-import { promisify } from 'util';
-import { recipeSchema } from '../schemas/recipes';
-import { uploadImage } from '../utils/awsUploads';
+import { recipeSchema, updateRecipeSchema } from '../schemas/recipes.js';
+import { uploadImage } from '../utils/awsUploads.js';
 
-// Create Redis client
-const redisClient = redis.createClient({
-  port: process.env.REDISPORT || 6379,
-  host: process.env.REDIS_HOST || 'localhost',
-});
-
-const getAsync = promisify(redisClient.get).bind(redisClient);
-const setAsync = promisify(redisClient.set).bind(redisClient);
-const delAsync = promisify(redisClient.del).bind(redisClient);
-const lpushAsync = promisify(redisClient.lPush).bind(redisClient);
-const lrangeAsync = promisify(redisClient.lRange).bind(redisClient);
+const redisClient = redis.createClient();
+await redisClient.connect();
+console.log({redisClient: redisClient});
 
 // Get a list of paginated recipes
 const getRecipes = async (req, res) => {
@@ -23,10 +14,11 @@ const getRecipes = async (req, res) => {
   const start = (page - 1) * limit;
 
   try {
-    const recipeIds = await lrangeAsync('recipes', start, start + limit - 1);
+    const recipeIds = await redisClient.lRange('recipes', start, start + limit - 1);
+    console.log(recipeIds);
     const recipes = [];
     for (const id of recipeIds) {
-      let recipe = await getAsync(id);
+      let recipe = await redisClient.get(id);
       if (!recipe) {
         const mongoRecipe = await Recipe.findById(id).exec();
         if (mongoRecipe) {
@@ -48,7 +40,7 @@ const getRecipes = async (req, res) => {
 const getRecipe = async (req, res) => {
   const { id } = req.params;
   try {
-    let recipe = await getAsync(id);
+    let recipe = await redisClient.get(id);
     if (!recipe) {
       const mongoRecipe = await Recipe.findById(id).exec();
       if (mongoRecipe) {
@@ -75,8 +67,8 @@ const createRecipe = async (req, res) => {
   try {
     const savedRecipe = await recipe.save();
     const id = savedRecipe._id.toString();
-    await setAsync(id, JSON.stringify(savedRecipe));
-    await lpushAsync('recipes', id);
+    await redisClient.set(id, JSON.stringify(savedRecipe));
+    await redisClient.lPush('recipes', id);
 
     // Upload image to S3
     if (req.file) {
@@ -93,7 +85,7 @@ const createRecipe = async (req, res) => {
 
 // Update a recipe by ID
 const updateRecipe = async (req, res) => {
-  const { error, value } = recipeSchema.validate(req.body);
+  const { error, value } = updateRecipeSchema.validate(req.body);
   if (error) {
     return res.status(400).send(error.details[0].message);
   }
@@ -102,7 +94,7 @@ const updateRecipe = async (req, res) => {
   try {
     const updatedRecipe = await Recipe.findByIdAndUpdate(id, value, { new: true }).exec();
     if (updatedRecipe) {
-      await setAsync(id, JSON.stringify(updatedRecipe));
+      await redisClient.set(id, JSON.stringify(updatedRecipe));
       return res.status(200).json(updatedRecipe);
     } else {
       return res.status(404).send('Recipe not found');
@@ -118,7 +110,7 @@ const deleteRecipe = async (req, res) => {
   try {
     const result = await Recipe.findByIdAndDelete(id).exec();
     if (result) {
-      await delAsync(id);
+      await redisClient.del(id);
       return res.send('Recipe deleted');
     } else {
       return res.status(404).send('Recipe not found');
