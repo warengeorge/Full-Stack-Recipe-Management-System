@@ -4,8 +4,10 @@ import { recipeSchema, updateRecipeSchema } from '../schemas/recipes.js';
 import { uploadImage } from '../utils/awsUploads.js';
 
 const redisClient = redis.createClient();
-await redisClient.connect();
-console.log({redisClient: redisClient});
+const redisConnected = await redisClient.connect();
+if (redisConnected) {
+  console.log('Connected to Redis');
+}
 
 // Get a list of paginated recipes
 const getRecipes = async (req, res) => {
@@ -15,7 +17,6 @@ const getRecipes = async (req, res) => {
 
   try {
     const recipeIds = await redisClient.lRange('recipes', start, start + limit - 1);
-    console.log(recipeIds);
     const recipes = [];
     for (const id of recipeIds) {
       let recipe = await redisClient.get(id);
@@ -97,7 +98,7 @@ const updateRecipe = async (req, res) => {
       await redisClient.set(id, JSON.stringify(updatedRecipe));
       return res.status(200).json(updatedRecipe);
     } else {
-      return res.status(404).send('Recipe not found');
+      return res.status(404).send('Recipe not updated');
     }
   } catch (error) {
     res.status(500).json({ message: error.message });

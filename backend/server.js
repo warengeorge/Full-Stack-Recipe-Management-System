@@ -3,7 +3,7 @@ import bodyParser from 'body-parser';
 import { connectDB } from './config/db.js';
 import recipeRouter from './routes/recipes.js';
 
-const app = express();
+export const app = express();
 const port = process.env.PORT || 3000;
 
 app.use(bodyParser.json());
