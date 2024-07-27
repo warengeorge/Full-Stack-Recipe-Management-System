@@ -1,5 +1,6 @@
 import './loadEnv.js';
-import express from 'express';
+import express, { json } from 'express';
+import cors from 'cors';
 import bodyParser from 'body-parser';
 import { connectDB } from './config/db.js';
 import swaggerUi from 'swagger-ui-express';
@@ -12,6 +13,11 @@ const swaggerFile = require('./swagger-output.json');
 
 export const app = express();
 
+// Middlewares
+app.use(cors());
+app.use(json());
+app.use(express.urlencoded({ extended: true }));
+app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerFile));
 
