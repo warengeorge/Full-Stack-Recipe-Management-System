@@ -23,26 +23,49 @@ const getRecipes = async (req, res) => {
   const start = (page - 1) * limit;
 
   try {
+    // Fetch recipe IDs from Redis
     const recipeIds = await redisClient.lRange('recipes', start, start + limit - 1);
+    console.log({ recipeIds: recipeIds });
+  
     const recipes = [];
+    const redisRecipeMap = new Map();
+  
+    // Fetch recipes from Redis
     for (const id of recipeIds) {
-      let recipe = await redisClient.get(id);
-      if (!recipe) {
-        const mongoRecipe = await Recipe.findById(id).exec();
-        if (mongoRecipe) {
-          recipe = JSON.stringify(mongoRecipe);
-          await setAsync(id, recipe);
-        }
-      }
+      const recipe = await redisClient.get(id);
       if (recipe) {
-        recipes.push(JSON.parse(recipe));
+        const parsedRecipe = JSON.parse(recipe);
+        recipes.push(parsedRecipe);
+        redisRecipeMap.set(id, parsedRecipe);
       }
     }
-    return res.status(200).json(recipes);
+  
+    // Fetch recipes from MongoDB excluding those already in Redis
+    const mongoRecipes = await Recipe.find({ _id: { $nin: Array.from(redisRecipeMap.keys()) } })
+      .sort({ createdAt: -1 })
+      .skip(start)
+      .limit(limit)
+      .exec();
+  
+    for (const mongoRecipe of mongoRecipes) {
+      const recipeId = mongoRecipe._id.toString();
+      const recipe = JSON.stringify(mongoRecipe);
+  
+      // Cache the fetched recipes in Redis
+      await redisClient.set(recipeId, recipe);
+      recipes.push(mongoRecipe);
+    }
+  
+    // Ensure no duplicates
+    const uniqueRecipes = Array.from(new Set(recipes.map(r => r._id.toString())))
+      .map(id => recipes.find(r => r._id.toString() === id));
+  
+    console.log({ recipes: uniqueRecipes });
+    return res.status(200).json(uniqueRecipes);
   } catch (error) {
     return res.status(500).json({ message: error.message });
   }
-} 
+}
 
 // Get a single recipe by ID
 const getRecipe = async (req, res) => {
@@ -61,7 +84,7 @@ const getRecipe = async (req, res) => {
       const mongoRecipe = await Recipe.findById(id).exec();
       if (mongoRecipe) {
         recipe = JSON.stringify(mongoRecipe);
-        await setAsync(id, recipe);
+        await redisClient.set(id, recipe);
       } else {
         return res.status(404).send('Recipe not found');
       }
@@ -81,14 +104,18 @@ const createRecipe = async (req, res) => {
   /* #swagger.responses[400] = { description: 'Invalid recipe details' } */
   /* #swagger.responses[500] = { description: 'Server error' } */
   /*#swagger.summary = 'Create a new recipe' */
-  
+
   const { error, value } = recipeSchema.validate(req.body);
   if (error) {
     return res.status(400).json({ message: error.details[0].message });
   }
 
-  const recipe = new Recipe(value);
   try {
+    const title = await Recipe.findOne({ title: value.title }).exec();
+    if (title) { return res.status(400).send('Recipe already exists'); }
+
+    const recipe = new Recipe(value);
+
     const savedRecipe = await recipe.save();
     const id = savedRecipe._id.toString();
     await redisClient.set(id, JSON.stringify(savedRecipe));
