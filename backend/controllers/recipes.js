@@ -25,7 +25,6 @@ const getRecipes = async (req, res) => {
   try {
     // Fetch recipe IDs from Redis
     const recipeIds = await redisClient.lRange('recipes', start, start + limit - 1);
-    console.log({ recipeIds: recipeIds });
   
     const recipes = [];
     const redisRecipeMap = new Map();
@@ -60,7 +59,6 @@ const getRecipes = async (req, res) => {
     const uniqueRecipes = Array.from(new Set(recipes.map(r => r._id.toString())))
       .map(id => recipes.find(r => r._id.toString() === id));
   
-    console.log({ recipes: uniqueRecipes });
     return res.status(200).json(uniqueRecipes);
   } catch (error) {
     return res.status(500).json({ message: error.message });
@@ -176,13 +174,21 @@ const deleteRecipe = async (req, res) => {
 
   const id = req.params.id;
   try {
-    const result = await Recipe.findByIdAndDelete(id).exec();
+    const result = await redisClient.del(id);
     if (result) {
-      await redisClient.del(id);
+      await redisClient.lRem('recipes', 0, id);
+      await Recipe.findByIdAndDelete(id).exec();
       return res.send('Recipe deleted');
     } else {
       return res.status(404).send('Recipe not found');
     }
+    // const result = await Recipe.findByIdAndDelete(id).exec();
+    // if (result) {
+    //   await redisClient.del(id);
+    //   return res.send('Recipe deleted');
+    // } else {
+    //   return res.status(404).send('Recipe not found');
+    // }
   } catch (error) {
     res.status(500).json({ message: error.message });
   }

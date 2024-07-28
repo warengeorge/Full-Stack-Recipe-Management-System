@@ -16,7 +16,7 @@ function Page() {
     setLoading(true)
     const fetchData = async (page) => {
       try {
-        const res = await axios.get(`http://localhost:9000/api/recipes?page=${page}`);
+        const res = await axios.get(`${process.env.BASE_URL}/api/recipes?page=${page}`);
         console.log(res)
         if (res.statusText != 'OK') {
           // This will activate the closest `error.js` Error Boundary
