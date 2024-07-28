@@ -1,6 +1,10 @@
 {
   "compilerOptions": {
-    "lib": ["dom", "dom.iterable", "esnext"],
+    "lib": [
+      "dom",
+      "dom.iterable",
+      "esnext"
+    ],
     "allowJs": true,
     "skipLibCheck": true,
     "strict": true,
@@ -18,9 +22,30 @@
       }
     ],
     "paths": {
-      "@/*": ["./*"]
+      "@/*": [
+        "./*"
+      ]
     }
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
-  "exclude": ["node_modules"]
+  "include": [
+    "next-env.d.ts",
+    "**/*.ts",
+    "**/*.tsx",
+    ".next/types/**/*.ts",
+    "app/components/Card.js",
+    "app/components/CreateForm.js",
+    "app/components/Header.js",
+    "app/components/Navigation.js",
+    "app/components/Search.js",
+    "app/recipes/[id]/page.js",
+    "app/recipes/create/page.js",
+    "app/recipes/edit/page.js",
+    "app/page.js",
+    "app/layout.js",
+    "tailwind.config.js",
+    "utils/api.js"
+  ],
+  "exclude": [
+    "node_modules"
+  ]
 }
