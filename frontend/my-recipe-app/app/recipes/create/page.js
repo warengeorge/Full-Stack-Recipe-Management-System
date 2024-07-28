@@ -16,7 +16,8 @@ function Page() {
         e.preventDefault();
         setLoading(true);
         try {
-            const res = await axios.post('http://localhost:9000/api/recipes', {
+            const base_url = `http://localhost:9000` || process.env.BASE_URL;
+            const res = await axios.post(`${base_url}/api/recipes`, {
                 title,
                 image,
                 ingredients: ingredients.split('\n'),

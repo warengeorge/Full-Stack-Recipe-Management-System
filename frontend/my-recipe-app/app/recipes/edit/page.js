@@ -16,7 +16,8 @@ function Edit() {
     e.preventDefault();
     setLoading(true);
     try {
-      const res = await axios.put('http://localhost:9000/api/recipes', {
+      const base_url = `http://localhost:9000` || process.env.BASE_URL;
+      const res = await axios.put(`${base_url}/api/recipes/${id}`, {
         title,
         image,
         ingredients: ingredients.split('\n'),
@@ -39,7 +40,8 @@ function Edit() {
     const formData = new FormData();
     formData.append('image', file);
     try {
-      const res = await axios.post('http://localhost:9000/api/recipes/upload', formData, {
+      const base_url = `http://localhost:9000` || process.env.BASE_URL;
+      const res = await axios.post(`${base_url}/api/recipes/upload`, formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
