@@ -4,12 +4,8 @@ import Recipe from '../models/recipes.js';
 import redis from 'redis';
 import { connectDB, disconnectDB } from '../config/db.js';
 
-// Connect to Redis
+
 const redisClient = redis.createClient();
-const redisConnected = await redisClient.connect();
-if (redisConnected) {
-  console.log('Connected to Redis');
-}
 
 // Mock the redis client
 jest.mock('redis', () => ({

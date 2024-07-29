@@ -7,6 +7,8 @@ const redisClient = redis.createClient();
 const redisConnected = await redisClient.connect();
 if (redisConnected) {
   console.log('Connected to Redis');
+} else {
+  console.error('Error connecting to Redis');
 }
 
 // Get a list of paginated recipes
@@ -23,12 +25,19 @@ const getRecipes = async (req, res) => {
   const start = (page - 1) * limit;
 
   try {
+    if (!redisConnected) {
+      const recipes = await Recipe.find().sort({ createdAt: -1 }).skip(start).limit(limit).exec();
+      if (!recipes) {
+        return res.status(404).send('Recipes not found');
+      }
+      return res.status(200).json(recipes);
+    }
     // Fetch recipe IDs from Redis
     const recipeIds = await redisClient.lRange('recipes', start, start + limit - 1);
-  
+
     const recipes = [];
     const redisRecipeMap = new Map();
-  
+
     // Fetch recipes from Redis
     for (const id of recipeIds) {
       const recipe = await redisClient.get(id);
@@ -38,27 +47,27 @@ const getRecipes = async (req, res) => {
         redisRecipeMap.set(id, parsedRecipe);
       }
     }
-  
+
     // Fetch recipes from MongoDB excluding those already in Redis
     const mongoRecipes = await Recipe.find({ _id: { $nin: Array.from(redisRecipeMap.keys()) } })
       .sort({ createdAt: -1 })
       .skip(start)
       .limit(limit)
       .exec();
-  
+
     for (const mongoRecipe of mongoRecipes) {
       const recipeId = mongoRecipe._id.toString();
       const recipe = JSON.stringify(mongoRecipe);
-  
+
       // Cache the fetched recipes in Redis
       await redisClient.set(recipeId, recipe);
       recipes.push(mongoRecipe);
     }
-  
+
     // Ensure no duplicates
     const uniqueRecipes = Array.from(new Set(recipes.map(r => r._id.toString())))
       .map(id => recipes.find(r => r._id.toString() === id));
-  
+
     return res.status(200).json(uniqueRecipes);
   } catch (error) {
     return res.status(500).json({ message: error.message });
@@ -77,6 +86,13 @@ const getRecipe = async (req, res) => {
 
   const { id } = req.params;
   try {
+    if (!redisConnected) {
+      const recipe = await Recipe.findById(id).exec();
+      if (!recipe) {
+        return res.status(404).send('Recipe not found');
+      }
+      return res.json(recipe);
+    }
     let recipe = await redisClient.get(id);
     if (!recipe) {
       const mongoRecipe = await Recipe.findById(id).exec();
