@@ -16,15 +16,15 @@ function Page() {
         e.preventDefault();
         setLoading(true);
         try {
-            const base_url = `http://localhost:9000` || process.env.BASE_URL;
+            const base_url = process.env.BASE_URL || "http://localhost:9000";
             const res = await axios.post(`${base_url}/api/recipes`, {
                 title,
                 image,
-                ingredients: ingredients.split('\n'),
+                ingredients: ingredients.split("\n"),
                 instructions: instructions.split('\n'),
             });
-            if (res.statusText != 'OK') {
-                // This will activate the closest `error.js` Error Boundary
+            if (res.statusText !== 'OK') {
+                // This will activate the closest ⁠ error.js ⁠ Error Boundary
                 throw new Error('Failed to fetch data');
             }
             console.log(res);
@@ -35,8 +35,9 @@ function Page() {
         }
     };
 
-    const handleImage = async (file) => {
+    const handleImage = async (e) => {
         e.preventDefault();
+        const file = e.target.files[0];
         const formData = new FormData();
         formData.append('image', file);
         try {
@@ -45,15 +46,15 @@ function Page() {
                     'Content-Type': 'multipart/form-data',
                 },
             });
-            if (res.statusText != 'OK') {
-                // This will activate the closest `error.js` Error Boundary
+            if (res.statusText !== 'OK') {
+                // This will activate the closest ⁠ error.js ⁠ Error Boundary
                 throw new Error('Failed to fetch data');
             }
-            setImage(res?.data?.url);
+            setImage(res.data.url);
         } catch (error) {
             console.error('Error fetching data:', error);
         }
-    }
+    };
 
     return (
         <div>
@@ -67,30 +68,30 @@ function Page() {
                         type="text"
                         placeholder="Title"
                         value={title}
+                        name="title"
                         onChange={(e) => setTitle(e.target.value)}
                         className="p-2 border border-gray-300 rounded"
                     />
                     <textarea
                         placeholder="Ingredients"
                         value={ingredients}
+                        name="ingredients"
                         onChange={(e) => setIngredients(e.target.value)}
                         className="p-2 border border-gray-300 rounded"
                     />
                     <textarea
                         placeholder="Instructions"
                         value={instructions}
+                        name="instructions"
                         onChange={(e) => setInstructions(e.target.value)}
                         className="p-2 border border-gray-300 rounded"
                     />
                     <input
-                        type="text"
-                        placeholder="Image URL"
-                        value={image}
-                        onChange={(e) => setImage(e.target.value)}
+                        type="file"
+                        onChange={handleImage}
                         className="p-2 border border-gray-300 rounded"
                     />
                     <button
-                        onSubmit={handleImage}
                         type="submit"
                         className="p-2 bg-blue-500 text-white rounded"
                     >

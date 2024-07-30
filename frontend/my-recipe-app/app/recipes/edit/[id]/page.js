@@ -17,7 +17,7 @@ function Edit() {
     setLoading(true);
     try {
       const base_url = `http://localhost:9000` || process.env.BASE_URL;
-      const res = await axios.put(`${base_url}/api/recipes/${id}`, {
+      const res = await axios.put(`${base_url}/api/recipes/edit/${id}`, {
         title,
         image,
         ingredients: ingredients.split('\n'),
@@ -84,19 +84,16 @@ function Edit() {
             className="p-2 border border-gray-300 rounded"
           />
           <input
-            type="text"
-            placeholder="Image URL"
-            value={image}
-            onChange={(e) => setImage(e.target.value)}
+            type="file"
+            onChange={handleImage}
             className="p-2 border border-gray-300 rounded"
           />
           <button
-            onSubmit={handleImage}
             type="submit"
             className="p-2 bg-blue-500 text-white rounded"
           >
             {loading ? 'Loading...' : 'Edit'}
-          </button>
+        </button>
         </form>
       </div>
     </div>
