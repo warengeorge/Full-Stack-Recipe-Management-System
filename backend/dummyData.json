@@ -1,0 +1,186 @@
+{
+  "title": "Spaghetti Carbonara",
+  "ingredients": ["Spaghetti", "Eggs", "Pancetta", "Parmesan Cheese", "Black Pepper"],
+  "instructions": [
+    "Boil the spaghetti according to package instructions.",
+    "Fry the pancetta until crisp.",
+    "Beat the eggs and mix with grated Parmesan cheese.",
+    "Combine spaghetti, pancetta, and egg mixture off the heat.",
+    "Season with black pepper and serve."
+  ]
+}
+{
+  "title": "Chicken Curry",
+  "ingredients": ["Chicken", "Onions", "Tomatoes", "Garlic", "Ginger", "Spices", "Coconut Milk"],
+  "instructions": [
+    "Saute onions, garlic, and ginger until soft.",
+    "Add spices and cook until fragrant.",
+    "Add chicken and cook until browned.",
+    "Add tomatoes and coconut milk, and simmer until chicken is cooked through.",
+    "Serve with rice."
+  ]
+},
+{
+  "title": "Chocolate Cake",
+  "ingredients": ["Flour", "Sugar", "Cocoa Powder", "Baking Powder", "Eggs", "Milk", "Butter"],
+  "instructions": [
+    "Preheat oven to 350°F (175°C).",
+    "Mix dry ingredients together.",
+    "Beat eggs, milk, and melted butter together.",
+    "Combine wet and dry ingredients and mix until smooth.",
+    "Pour batter into a greased baking pan and bake for 30-35 minutes.",
+    "Let cool before serving."
+  ]
+},
+{
+  "title": "Caesar Salad",
+  "ingredients": ["Romaine Lettuce", "Croutons", "Parmesan Cheese", "Caesar Dressing"],
+  "instructions": [
+    "Chop the romaine lettuce.",
+    "Toss lettuce with Caesar dressing.",
+    "Add croutons and grated Parmesan cheese.",
+    "Serve immediately."
+  ]
+},
+{
+  "title": "Vegetable Stir-Fry",
+  "ingredients": ["Broccoli", "Carrots", "Bell Peppers", "Soy Sauce", "Garlic", "Ginger", "Olive Oil"],
+  "instructions": [
+    "Heat olive oil in a pan.",
+    "Add garlic and ginger and cook until fragrant.",
+    "Add vegetables and stir-fry until tender.",
+    "Add soy sauce and cook for another 2-3 minutes.",
+    "Serve with rice or noodles."
+  ]
+}
+{
+  "title": "Pancakes",
+  "ingredients": ["Flour", "Milk", "Eggs", "Sugar", "Baking Powder", "Butter", "Maple Syrup"],
+  "instructions": [
+    "Mix flour, sugar, and baking powder together.",
+    "Beat eggs and milk together.",
+    "Combine wet and dry ingredients and mix until smooth.",
+    "Heat a pan and melt butter.",
+    "Pour batter into pan and cook until bubbles form on the surface.",
+    "Flip and cook until golden brown.",
+    "Serve with maple syrup."
+  ]
+}
+{
+  "title": "Beef Stew",
+  "ingredients": ["Beef", "Potatoes", "Carrots", "Onions", "Garlic", "Beef Broth", "Tomato Paste"],
+  "instructions": [
+    "Brown beef in a pot.",
+    "Add onions and garlic and cook until soft.",
+    "Add beef broth, tomato paste, and vegetables.",
+    "Simmer for 1-2 hours until beef is tender.",
+    "Serve with crusty bread."
+  ]
+}
+{
+  "title": "Tiramisu",
+  "ingredients": ["Ladyfingers", "Espresso", "Mascarpone Cheese", "Eggs", "Sugar", "Cocoa Powder"],
+  "instructions": [
+    "Dip ladyfingers in espresso and layer in a dish.",
+    "Mix mascarpone cheese, eggs, and sugar until smooth.",
+    "Spread cheese mixture over ladyfingers.",
+    "Repeat layers and refrigerate for at least 4 hours.",
+    "Dust with cocoa powder before serving."
+  ]
+}
+{
+  "title": "Guacamole",
+  "ingredients": ["Avocados", "Tomatoes", "Onions", "Lime Juice", "Cilantro", "Salt"],
+  "instructions": [
+    "Mash avocados in a bowl.",
+    "Add chopped tomatoes, onions, and cilantro.",
+    "Mix in lime juice and salt to taste.",
+    "Serve with tortilla chips."
+  ]
+}
+{
+  "title": "Chicken Noodle Soup",
+  "ingredients": ["Chicken", "Carrots", "Celery", "Onions", "Garlic", "Chicken Broth", "Egg Noodles"],
+  "instructions": [
+    "Saute onions, carrots, and celery until soft.",
+    "Add garlic and cook until fragrant.",
+    "Add chicken broth and bring to a boil.",
+    "Add chicken and egg noodles and simmer until noodles are cooked.",
+    "Season with salt and pepper before serving."
+  ]
+}
+{
+  "title": "Spaghetti Bolognese",
+  "ingredients": ["Spaghetti", "Ground Beef", "Tomatoes", "Onions", "Garlic", "Carrots", "Celery"],
+  "instructions": [
+    "Saute onions, garlic, carrots, and celery until soft.",
+    "Add ground beef and cook until browned.",
+    "Add tomatoes and simmer for 1-2 hours.",
+    "Serve over cooked spaghetti."
+  ]
+}
+{
+  "title": "Apple Pie",
+  "ingredients": ["Apples", "Sugar", "Flour", "Butter", "Cinnamon", "Nutmeg", "Pie Crust"],
+  "instructions": [
+    "Peel and slice apples.",
+    "Mix apples with sugar, flour, and spices.",
+    "Line a pie dish with crust and fill with apple mixture.",
+    "Top with butter and cover with another crust.",
+    "Bake at 375°F (190°C) for 45-50 minutes.",
+    "Let cool before serving."
+  ]
+}
+{
+  "title": "Lasagna",
+  "ingredients": ["Lasagna Noodles", "Ground Beef", "Tomato Sauce", "Ricotta Cheese", "Mozzarella Cheese", "Parmesan Cheese"],
+  "instructions": [
+    "Cook lasagna noodles according to package instructions.",
+    "Brown ground beef and mix with tomato sauce.",
+    "Layer noodles, meat sauce, ricotta, mozzarella, and Parmesan cheese.",
+    "Repeat layers and bake at 375°F (190°C) for 30-40 minutes.",
+    "Let cool before serving."
+  ]
+}
+{
+  "title": "Fish Tacos",
+  "ingredients": ["Fish Fillets", "Tortillas", "Cabbage", "Lime Juice", "Cilantro", "Sour Cream", "Salsa"],
+  "instructions": [
+    "Season fish fillets with spices and grill until cooked.",
+    "Warm tortillas on a griddle.",
+    "Fill tortillas with fish, cabbage, cilantro, sour cream, and salsa.",
+    "Serve with lime wedges."
+  ]
+}
+{
+  "title": "Jollof Rice",
+  "ingredients": ["Rice", "Tomatoes", "Onions", "Bell Peppers", "Scotch Bonnet Peppers", "Spices", "Chicken"],
+  "instructions": [
+    "Blend tomatoes, onions, bell peppers, and Scotch bonnet peppers.",
+    "Saute the blended mixture until thickened.",
+    "Add spices, rice, and chicken.",
+    "Simmer until rice is cooked and chicken is tender.",
+    "Serve with fried plantains."
+  ]
+}
+Pancakes
+
+1.Flour 
+2.Milk 
+3.Eggs
+4.Sugar 
+5.Baking Powder 
+6.Butter 
+7.Maple Syrup
+
+1. Mix flour, sugar, and baking powder together. 
+2. Beat eggs and milk together.
+3. Combine wet and dry ingredients and mix until smooth.
+4. Heat a pan and melt butter.
+5.Pour batter into pan and cook until bubbles form on the surface.
+6. Flip and cook until golden brown.
+7. Serve with maple syrup.
+
+Pancakes 
+Flour, Milk, Eggs, Sugar, Baking Powder, Butter, Maple Syrup
+Mix flour, sugar, and baking powder together. Beat eggs and milk together. Combine wet and dry ingredients and mix until smooth. Heat a pan and melt butter. Pour batter into pan and cook until bubbles form on the surface. Flip and cook until golden brown. Serve with maple syrup.

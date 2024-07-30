@@ -4,7 +4,7 @@ import { recipeSchema, updateRecipeSchema } from '../schemas/recipes.js';
 import { uploadImage } from '../utils/awsUploads.js';
 
 const redisClient = redis.createClient();
-const redisConnected = await redisClient.connect();
+const redisConnected = redisClient.connect();
 if (redisConnected) {
   console.log('Connected to Redis');
 } else {
@@ -47,7 +47,7 @@ const getRecipes = async (req, res) => {
         redisRecipeMap.set(id, parsedRecipe);
       }
     }
-
+    
     // Fetch recipes from MongoDB excluding those already in Redis
     const mongoRecipes = await Recipe.find({ _id: { $nin: Array.from(redisRecipeMap.keys()) } })
       .sort({ createdAt: -1 })
