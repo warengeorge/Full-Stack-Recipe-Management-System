@@ -5,12 +5,16 @@ import { uploadImage } from '../utils/awsUploads.js';
 
 const redisConfig = process.env==='production' ? { url: process.env.REDIS_URL } : {};
 
+try {
 const redisClient = redis.createClient(redisConfig);
 const redisConnected = await redisClient.connect();
 if (redisConnected) {
   console.log('Connected to Redis');
 } else {
   console.error('Error connecting to Redis');
+}
+} catch (error) {
+  console.error('Error connecting to Redis:', error);
 }
 
 // Get a list of paginated recipes
