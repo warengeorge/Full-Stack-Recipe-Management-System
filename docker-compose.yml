@@ -11,6 +11,7 @@ services:
     environment:
       REDIS_HOST: redis_database
       REDIS_PORT: 6379
+      
   redis_database:
       container_name: redis
       image: redis:alpine3.16

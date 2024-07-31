@@ -1,0 +1,15 @@
+services:
+  - type: web
+    name: application
+    repo: https://github.com/warengeorge/Full-Stack-Recipe-Management-System/tree/main
+    buildFilter:
+      paths:
+        - /backend/**
+    buildCommand: npm install
+    startCommand: npm start
+    runtime: node
+
+  - type: redis
+    ipAllowList: []
+    name: redis_database
+    
