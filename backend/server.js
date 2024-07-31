@@ -6,6 +6,7 @@ import { connectDB } from './config/db.js';
 import swaggerUi from 'swagger-ui-express';
 import { createRequire } from 'module';
 import recipeRouter from './routes/recipes.js';
+import redisConnection from './config/redis.js';
 
 const port = process.env.PORT || 3000;
 const require = createRequire(import.meta.url);
@@ -26,6 +27,7 @@ app.use('/api/recipes', recipeRouter);
 app.get('/', (req, res) => res.send('Welcome to my recipe app'));
 
 const startServer = async () => {
+  await redisConnection();
   await connectDB();
   app.listen(port, () => {
     console.log(`Server is listening at http://localhost:${port}`);
