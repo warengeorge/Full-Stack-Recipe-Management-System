@@ -9,6 +9,13 @@ services:
     startCommand: cd backend npm start
     runtime: node
     plan: free
+    # connect to the redis_database service
+    
+    # depends_on:
+      - redis_database
+    environment:
+      REDIS_HOST: redis_database
+      REDIS_PORT: 6379
 
   - type: redis
     ipAllowList: []
