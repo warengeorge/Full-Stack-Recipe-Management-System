@@ -2,17 +2,17 @@
 
 import Image from 'next/image';
 import axios from 'axios';
-import { useParams } from 'next/navigation';
-// import { useRouter } from 'next/router';
+import { useParams, useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import Navigation from '@/app/components/Navigation';
 import Link from 'next/link';
+
 
 function Details() {
   const { id } = useParams();
   const [recipe, setRecipe] = useState(null);
   const [loading, setLoading] = useState(false);
-  // const router = useRouter();
+  const router = useRouter();
 
   useEffect(() => {
     setLoading(true);
@@ -20,10 +20,6 @@ function Details() {
       try {
         const base_url = process.env.BASE_URL || 'http://localhost:9000';
         const res = await axios.get(`${base_url}/api/recipes/${id}`);
-        if (res.statusText != 'OK') {
-          // This will activate the closest `error.js` Error Boundary
-          throw new Error('Failed to fetch data');
-        }
         setRecipe(res?.data);
         setLoading(false);
       } catch (error) {
@@ -41,9 +37,8 @@ function Details() {
     try {
       const base_url = process.env.BASE_URL || 'http://localhost:9000';
       const res = await axios.delete(`${base_url}/api/recipes/${id}`);
-      if (res.statusText != 'OK') {
-        // This will activate the closest `error.js` Error Boundary
-        throw new Error('Failed to fetch data');
+      if (res.status ===  200) {
+        router.replace('/');
       }
       console.log(res);
       setLoading(false);

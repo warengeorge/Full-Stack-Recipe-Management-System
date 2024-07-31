@@ -12,19 +12,14 @@ function Page() {
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
 
-console.log({ENV: process.env.BASE_URL})
   useEffect(() => {
     setLoading(true)
     const fetchData = async (page) => {
       try {
         const base_url = process.env.BASE_URL || 'http://localhost:9000';
         const res = await axios.get(`${base_url}/api/recipes?page=${page}`);
-        console.log(res)
-        if (res.statusText != 'OK') {
-          // This will activate the closest `error.js` Error Boundary
-          throw new Error('Failed to fetch data');
-        }
-        console.log(res.data)
+        console.log('res', res)
+        console.log('data==========', res?.data)
         setData(res?.data);
         setLoading(false);
       } catch (error) {
@@ -36,6 +31,7 @@ console.log({ENV: process.env.BASE_URL})
     fetchData();
   }, [name]);
 
+  console.log('data..*******', data);
   return (
     <div>
 

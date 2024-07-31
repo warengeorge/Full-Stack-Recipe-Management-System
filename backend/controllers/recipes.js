@@ -133,6 +133,18 @@ const createRecipe = async (req, res) => {
   }
 
   try {
+    if (!redisConnected) {
+      const title = await Recipe.findOne({ title: value.title }).exec();
+      if (title) { return res.status(400).send('Recipe already exists'); }
+      const recipe = new Recipe(value);
+      const savedRecipe = await recipe.save();
+      if (req.file) {
+        const imageUrl = await uploadImage(savedRecipe._id, req.file);
+        savedRecipe.image = imageUrl;
+        await savedRecipe.save();
+      }
+      return res.status(201).json(savedRecipe);
+    }
     const title = await Recipe.findOne({ title: value.title }).exec();
     if (title) { return res.status(400).send('Recipe already exists'); }
 
@@ -174,6 +186,13 @@ const updateRecipe = async (req, res) => {
 
   const id = req.params.id;
   try {
+    if (!redisConnected) {
+      const updatedRecipe = await Recipe.findByIdAndUpdate(id, value, { new: true }).exec();
+      if (updatedRecipe) {
+        return res.status(200).json(updatedRecipe);
+      }
+      return res.status(404).send('Recipe not updated');
+    }
     const updatedRecipe = await Recipe.findByIdAndUpdate(id, value, { new: true }).exec();
     if (updatedRecipe) {
       await redisClient.set(id, JSON.stringify(updatedRecipe));
@@ -198,11 +217,19 @@ const deleteRecipe = async (req, res) => {
 
   const id = req.params.id;
   try {
+    if (!redisConnected) {
+      const result = await Recipe.findByIdAndDelete(id).exec();
+      if (result) {
+        return res.send('Recipe deleted');
+      } else {
+        return res.status(404).send('Recipe not found');
+      }
+    }
     const result = await redisClient.del(id);
     if (result) {
       await redisClient.lRem('recipes', 0, id);
       await Recipe.findByIdAndDelete(id).exec();
-      return res.send('Recipe deleted');
+      return res.status(200).send('Recipe deleted');
     } else {
       return res.status(404).send('Recipe not found');
     }
