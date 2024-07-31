@@ -9,6 +9,12 @@ services:
     startCommand: cd backend npm start
     runtime: node
     plan: free
+    envVars:
+      - key: REDIS_URL
+        fromService:
+          name: redis_database
+          type: redis
+          property: url
 
   - type: redis
     ipAllowList: []
