@@ -3,7 +3,9 @@ import redis from 'redis';
 import { recipeSchema, updateRecipeSchema } from '../schemas/recipes.js';
 import { uploadImage } from '../utils/awsUploads.js';
 
-const redisClient = redis.createClient();
+const redisConfig = process.env==='production' ? { url: process.env.REDIS_URL } : {};
+
+const redisClient = redis.createClient(redisConfig);
 const redisConnected = await redisClient.connect();
 if (redisConnected) {
   console.log('Connected to Redis');
