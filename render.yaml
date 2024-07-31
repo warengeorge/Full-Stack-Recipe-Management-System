@@ -1,7 +1,7 @@
 services:
   - type: web
     name: application
-    repo: https://github.com/warengeorge/Full-Stack-Recipe-Management-System/tree/main
+    repo: https://github.com/warengeorge/Full-Stack-Recipe-Management-System
     buildFilter:
       paths:
         - ./backend/**
