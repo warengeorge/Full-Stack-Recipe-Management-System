@@ -16,7 +16,7 @@ function Page() {
         e.preventDefault();
         setLoading(true);
         try {
-            const base_url = process.env.BASE_URL || "http://localhost:9000";
+            const base_url = process.env.BASE_URL || 'http://localhost:9000';
             const res = await axios.post(`${base_url}/api/recipes`, {
                 title,
                 image,

@@ -16,7 +16,7 @@ function Edit() {
     e.preventDefault();
     setLoading(true);
     try {
-      const base_url = `http://localhost:9000` || process.env.BASE_URL;
+      const base_url = process.env.BASE_URL || 'http://localhost:9000';
       const res = await axios.put(`${base_url}/api/recipes/edit/${id}`, {
         title,
         image,

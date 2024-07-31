@@ -16,7 +16,7 @@ function Page() {
     setLoading(true)
     const fetchData = async (page) => {
       try {
-        const base_url = `http://localhost:9000` || process.env.BASE_URL;
+        const base_url = process.env.BASE_URL || 'http://localhost:9000';
         const res = await axios.get(`${base_url}/api/recipes?page=${page}`);
         console.log(res)
         if (res.statusText != 'OK') {
