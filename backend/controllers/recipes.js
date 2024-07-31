@@ -4,7 +4,7 @@ import { recipeSchema, updateRecipeSchema } from '../schemas/recipes.js';
 import { uploadImage } from '../utils/awsUploads.js';
 
 const redisClient = redis.createClient();
-const redisConnected = redisClient.connect();
+const redisConnected = await redisClient.connect();
 if (redisConnected) {
   console.log('Connected to Redis');
 } else {
