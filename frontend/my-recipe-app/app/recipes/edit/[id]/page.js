@@ -40,7 +40,7 @@ function Edit() {
     const formData = new FormData();
     formData.append('image', file);
     try {
-      const base_url = `http://localhost:9000` || process.env.BASE_URL;
+      const base_url = process.env.BASE_URL || 'http://localhost:9000';
       const res = await axios.post(`${base_url}/api/recipes/upload`, formData, {
         headers: {
           'Content-Type': 'multipart/form-data',

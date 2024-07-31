@@ -39,7 +39,7 @@ function Details() {
     e.preventDefault();
     setLoading(true);
     try {
-      const base_url = `http://localhost:9000` || process.env.BASE_URL;
+      const base_url = process.env.BASE_URL || 'http://localhost:9000';
       const res = await axios.delete(`${base_url}/api/recipes/${id}`);
       if (res.statusText != 'OK') {
         // This will activate the closest `error.js` Error Boundary
