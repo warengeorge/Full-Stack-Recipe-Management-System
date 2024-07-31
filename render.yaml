@@ -8,8 +8,9 @@ services:
     buildCommand: npm install
     startCommand: npm start
     runtime: node
+    plan: free
 
   - type: redis
     ipAllowList: []
     name: redis_database
-    
+    plan: free
