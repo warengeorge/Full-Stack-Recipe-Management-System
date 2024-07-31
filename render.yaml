@@ -4,7 +4,7 @@ services:
     repo: https://github.com/warengeorge/Full-Stack-Recipe-Management-System/tree/main
     buildFilter:
       paths:
-        - /backend/**
+        - ./backend/**
     buildCommand: npm install
     startCommand: npm start
     runtime: node
