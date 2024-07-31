@@ -6,9 +6,10 @@ import { uploadImage } from '../utils/awsUploads.js';
 const redisConfig = process.env === 'production' ? { url: process.env.REDIS_URL } : {};
 
 let redisConnected;
+let redisClient;
 
 try {
-  const redisClient = redis.createClient(redisConfig);
+  redisClient = redis.createClient(redisConfig);
   redisConnected = await redisClient?.connect();
   if (redisConnected) {
     console.log('Connected to Redis');

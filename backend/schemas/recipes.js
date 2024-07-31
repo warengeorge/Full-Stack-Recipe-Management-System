@@ -4,7 +4,7 @@ export const recipeSchema = Joi.object({
   title: Joi.string().required(),
   ingredients: Joi.array().items(Joi.string()).required(),
   instructions: Joi.array().items(Joi.string()).required(),
-  image: Joi.string(),
+  image: Joi.string().allow(null, ''),
 });
 
 export const updateRecipeSchema = Joi.object({
