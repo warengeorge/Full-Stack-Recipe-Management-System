@@ -5,8 +5,8 @@ services:
     buildFilter:
       paths:
         - ./backend/**
-    buildCommand: npm install
-    startCommand: npm start
+    buildCommand: cd backend npm install
+    startCommand: cd backend npm start
     runtime: node
     plan: free
 
