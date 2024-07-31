@@ -12,6 +12,7 @@ function Page() {
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
 
+console.log({ENV: process.env.BASE_URL})
   useEffect(() => {
     setLoading(true)
     const fetchData = async (page) => {
