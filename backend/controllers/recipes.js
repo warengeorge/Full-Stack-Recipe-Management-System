@@ -20,14 +20,6 @@ const getRecipes = async (req, res) => {
   const start = (page - 1) * limit;
 
   try {
-    // if (!redisConnected) {
-    //   const recipes = await Recipe.find().sort({ createdAt: -1 }).skip(start).limit(limit).exec();
-    //   if (!recipes) {
-    //     return res.status(404).send('Recipes not found');
-    //   }
-    //   return res.status(200).json(recipes);
-    // }
-    // Fetch recipe IDs from Redis
     const recipeIds = await redisClient.lRange('recipes', start, start + limit - 1);
 
     const recipes = [];
@@ -65,6 +57,7 @@ const getRecipes = async (req, res) => {
 
     return res.status(200).json(uniqueRecipes);
   } catch (error) {
+    console.error('Error fetching recipes:', error);
     return res.status(500).json({ message: error.message });
   }
 }
@@ -81,13 +74,6 @@ const getRecipe = async (req, res) => {
 
   const { id } = req.params;
   try {
-    // if (!redisConnected) {
-    //   const recipe = await Recipe.findById(id).exec();
-    //   if (!recipe) {
-    //     return res.status(404).send('Recipe not found');
-    //   }
-    //   return res.json(recipe);
-    // }
     let recipe = await redisClient.get(id);
     if (!recipe) {
       const mongoRecipe = await Recipe.findById(id).exec();
@@ -118,46 +104,44 @@ const createRecipe = async (req, res) => {
   if (error) {
     return res.status(400).json({ message: error.details[0].message });
   }
-  console.log('value', value);
+
   try {
-    // if (!redisConnected) {
-    //   const title = await Recipe.findOne({ title: value.title }).exec();
-    //   if (title) { return res.status(400).send('Recipe already exists'); }
-    //   const { image, ...fields } = value;
-      
-    //   const recipe = new Recipe(fields);
-    //   const savedRecipe = await recipe.save();
-    //   console.log('savedRecipe', savedRecipe);
-    //   if (req.file) {
-    //     const imageUrl = await uploadImage(savedRecipe._id, req.file);
-    //     savedRecipe.image = imageUrl;
-    //     await savedRecipe.save();
-    //   }
-    //   return res.status(201).json(savedRecipe);
-    // }
-    const title = await Recipe.findOne({ title: value.title }).exec();
-    if (title) { return res.status(400).send('Recipe already exists'); }
-    const { image, ...fields } = value;
-    const recipe = new Recipe(fields);
-
-    const savedRecipe = await recipe.save();
-    const id = savedRecipe._id.toString();
-    await redisClient.set(id, JSON.stringify(savedRecipe));
-    await redisClient.lPush('recipes', id);
-
-    // Upload image to S3
-    if (req.file) {
-      const imageUrl = await uploadImage(id, req.file);
-      recipe.image = imageUrl;
-      console.log('imageUrl', imageUrl);
-      await recipe.save();
+    // Check if a recipe with the same title already exists
+    const existingRecipe = await Recipe.findOne({ title: value.title }).exec();
+    if (existingRecipe) {
+      console.log('Recipe already exists with title:', value.title);
+      return res.status(400).json({ message: 'Recipe already exists' });
     }
+
+    const { image, ...fields } = value;
+    const newRecipe = new Recipe(fields);
+
+    // Save the new recipe to the database
+    const savedRecipe = await newRecipe.save();
+    const recipeId = savedRecipe._id.toString();
+
+    // Upload image to S3 if file is provided
+    if (req.file) {
+      try {
+        const imageUrl = await uploadImage(recipeId, req.file);
+        savedRecipe.image = imageUrl;
+        await savedRecipe.save();
+      } catch (uploadError) {
+        await Recipe.findByIdAndDelete(recipeId);
+        return res.status(400).json({ message: 'Error uploading image, recipe not saved' });
+      }
+    }
+
+    // Cache the saved recipe in Redis
+    await redisClient.set(recipeId, JSON.stringify(savedRecipe));
+    await redisClient.lPush('recipes', recipeId);
 
     return res.status(201).json(savedRecipe);
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    console.error('Error saving recipe:', error);
+    return res.status(500).json({ message: 'Internal server error' });
   }
-}
+};
 
 // Update a recipe by ID
 const updateRecipe = async (req, res) => {
@@ -177,20 +161,12 @@ const updateRecipe = async (req, res) => {
 
   const id = req.params.id;
   try {
-    // if (!redisConnected) {
-    //   const updatedRecipe = await Recipe.findByIdAndUpdate(id, value, { new: true }).exec();
-    //   if (updatedRecipe) {
-    //     return res.status(200).json(updatedRecipe);
-    //   }
-    //   return res.status(404).send('Recipe not updated');
-    // }
     const updatedRecipe = await Recipe.findByIdAndUpdate(id, value, { new: true }).exec();
     if (updatedRecipe) {
       await redisClient.set(id, JSON.stringify(updatedRecipe));
       return res.status(200).json(updatedRecipe);
-    } else {
-      return res.status(404).send('Recipe not updated');
     }
+    return res.status(404).send('Recipe not updated');
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
@@ -208,29 +184,14 @@ const deleteRecipe = async (req, res) => {
 
   const id = req.params.id;
   try {
-    // if (!redisConnected) {
-    //   const result = await Recipe.findByIdAndDelete(id).exec();
-    //   if (result) {
-    //     return res.send('Recipe deleted');
-    //   } else {
-    //     return res.status(404).send('Recipe not found');
-    //   }
-    // }
     const result = await redisClient.del(id);
     if (result) {
       await redisClient.lRem('recipes', 0, id);
       await Recipe.findByIdAndDelete(id).exec();
       return res.status(200).send('Recipe deleted');
-    } else {
-      return res.status(404).send('Recipe not found');
     }
-    // const result = await Recipe.findByIdAndDelete(id).exec();
-    // if (result) {
-    //   await redisClient.del(id);
-    //   return res.send('Recipe deleted');
-    // } else {
-    //   return res.status(404).send('Recipe not found');
-    // }
+
+    return res.status(404).send('Recipe not found');
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
