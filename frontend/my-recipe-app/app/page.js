@@ -4,13 +4,19 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import Card from './components/Card';
 import Navigation from './components/Navigation';
+import Pagination from './components/Pagination';
 
-function Page() {
-  const [name, setName] = useState('beef');
+function Page({ searchParams }) {
+  const page = searchParams['page'] || 1;
+  const per_page = searchParams['per_page'] || 10;
   const [data, setData] = useState(null);
   const[loading,setLoading] = useState(false);
-  const [currentPage, setCurrentPage] = useState(1);
-  const [totalPages, setTotalPages] = useState(1);
+
+  const start = (page - 1) * per_page; // 0, 10, 20, 30, ...
+  const end = start + per_page; // 10, 20, 30, 40, ...
+
+  const entries = data?.uniqueRecipes.slice(start, end);
+  const totalPages = data?.totalPages;
 
   useEffect(() => {
     setLoading(true)
@@ -18,9 +24,9 @@ function Page() {
       try {
         const base_url = process.env.BASE_URL || 'http://localhost:9000';
         const res = await axios.get(`${base_url}/api/recipes?page=${page}`);
-        console.log('res', res)
-        console.log('data==========', res?.data)
+        console.log('res', res);
         setData(res?.data);
+        console.log('data', res.data);
         setLoading(false);
       } catch (error) {
         console.error('Error fetching data:', error);
@@ -29,9 +35,9 @@ function Page() {
     };
 
     fetchData();
-  }, [name]);
+  }, [page]);
 
-  console.log('data..*******', data);
+  console.log('totalPages', totalPages);  
   return (
     <div>
 
@@ -44,15 +50,20 @@ function Page() {
           {
             !loading &&  
             <>
-            {data?.map((recipe) => (
+            {entries?.map((recipe) => (
               <Card key={recipe.idrecipe} recipe={recipe} />
             ))}
             </>
           }
-          
         </div>
       </div>
-
+      <div className='flex justify-center'>
+      <Pagination
+            totaPages={totalPages}
+            hasNextPage={end < data?.uniqueRecipes.length}
+            hasPrevPage={start > 0}
+          />
+      </div>
     </div>
   );
 }

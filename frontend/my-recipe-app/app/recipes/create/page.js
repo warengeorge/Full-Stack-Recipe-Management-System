@@ -2,10 +2,12 @@
 
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
+import { useRouter } from 'next/navigation';
 import Navigation from '@/app/components/Navigation';
 
 // Create a new recipe
 function Page() {
+    const router = useRouter();
     const [title, setTitle] = useState('');
     const [image, setImage] = useState('');
     const [ingredients, setIngredients] = useState('');
@@ -15,20 +17,32 @@ function Page() {
     const handleSubmit = async (e) => {
         e.preventDefault();
         setLoading(true);
+        const formData = new FormData();
+        formData.append('title', title);
+        instructions.split('\n').forEach((instruction, index) => {
+            formData.append(`instructions[${index}]`, instruction);
+        });
+        ingredients.split('\n').forEach((ingredient, index) => {
+            formData.append(`ingredients[${index}]`, ingredient);
+        });
+        if (image) {
+            formData.append('file', image);
+        }
+
+
         try {
             const base_url = process.env.BASE_URL || `http://localhost:9000`;
-            const res = await axios.post(`${base_url}/api/recipes`, {
-                title,
-                image,
-                ingredients: ingredients.split("\n"),
-                instructions: instructions.split('\n'),
+            const res = await axios.post(`${base_url}/api/recipes`, formData, {
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                },
             });
-            if (res.statusText !== 'OK') {
-                // This will activate the closest ⁠ error.js ⁠ Error Boundary
-                throw new Error('Failed to fetch data');
+            
+            if (res.status === 200) {
+                router.replace('/');
             }
             console.log(res);
-            setLoading(false);
+            setLoading(true);
         } catch (error) {
             console.error('Error fetching data:', error);
             setLoading(false);
@@ -38,22 +52,7 @@ function Page() {
     const handleImage = async (e) => {
         e.preventDefault();
         const file = e.target.files[0];
-        const formData = new FormData();
-        formData.append('image', file);
-        try {
-            const res = await axios.post(`${process.env.BASE_URL}/api/recipes/upload`, formData, {
-                headers: {
-                    'Content-Type': 'multipart/form-data',
-                },
-            });
-            if (res.statusText !== 'OK') {
-                // This will activate the closest ⁠ error.js ⁠ Error Boundary
-                throw new Error('Failed to fetch data');
-            }
-            setImage(res.data.url);
-        } catch (error) {
-            console.error('Error fetching data:', error);
-        }
+        setImage(file);
     };
 
     return (
