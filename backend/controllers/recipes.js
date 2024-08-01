@@ -55,7 +55,9 @@ const getRecipes = async (req, res) => {
     const uniqueRecipes = Array.from(new Set(recipes.map(r => r._id.toString())))
       .map(id => recipes.find(r => r._id.toString() === id));
 
-    return res.status(200).json(uniqueRecipes);
+    // return paginated recipes
+    return res.status(200).json({ uniqueRecipes, totalPages: Math.ceil(uniqueRecipes.length / limit) });
+
   } catch (error) {
     console.error('Error fetching recipes:', error);
     return res.status(500).json({ message: error.message });
@@ -84,7 +86,7 @@ const getRecipe = async (req, res) => {
         return res.status(404).send('Recipe not found');
       }
     }
-    return res.json(JSON.parse(recipe));
+    return res.status(200).json({ data: JSON.parse(recipe) });
   } catch (error) {
     return res.status(500).json({ message: error.message });
   }
@@ -136,7 +138,7 @@ const createRecipe = async (req, res) => {
     await redisClient.set(recipeId, JSON.stringify(savedRecipe));
     await redisClient.lPush('recipes', recipeId);
 
-    return res.status(201).json(savedRecipe);
+    return res.status(201).json({ data: savedRecipe });
   } catch (error) {
     console.error('Error saving recipe:', error);
     return res.status(500).json({ message: 'Internal server error' });
@@ -164,7 +166,7 @@ const updateRecipe = async (req, res) => {
     const updatedRecipe = await Recipe.findByIdAndUpdate(id, value, { new: true }).exec();
     if (updatedRecipe) {
       await redisClient.set(id, JSON.stringify(updatedRecipe));
-      return res.status(200).json(updatedRecipe);
+      return res.status(200).json({ data: updatedRecipe });
     }
     return res.status(404).send('Recipe not updated');
   } catch (error) {

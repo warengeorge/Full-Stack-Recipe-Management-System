@@ -9,5 +9,6 @@ To update the swagger file after adding new enpoints, run the following commands
 ```
     npm run swagger-autogen
 ```
+The documentation can be seen here: https://application-qip5.onrender.com/api-docs/#/
 ##  To check for the rendered version 
-The API can be seen here: https://full-stack-recipe-management-system.onrender.com
+The API can be seen here: https://application-qip5.onrender.com/
