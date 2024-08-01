@@ -13,6 +13,11 @@ The project can be seen here: https://full-stack-recipe-management-system.vercel
 ## Backend
 - Database: The backend was built with `redis` as a caching system and `mongodb` as the real database on the cloud.
 - Server: `Express.js` and `Node.js` Javascript runtime
-- Documentation: `Swagger` at (https://full-stack-recipe-management-system.onrender.com/api-docs/#/)
+- Documentation: `Swagger` at (https://application-qip5.onrender.com/api-docs/#/)
 - Test: Unit Tests written with jest and supertest
-- Images: Saved on AWS s3 Bucket and connect to the backend server correctly 
+- Images: Saved on aws s3 Bucket and connected to the backend server correctly 
+
+## Deployment 
+- Configuration: The app was deployed on render.com using a `render.yaml` file for configuration.
+- Frontend: was deployed on Vercel, and can be seen here: https://full-stack-recipe-management-system.vercel.app/
+- Backend:  was deployed on render.com and can be seen here: https://application-qip5.onrender.com/
