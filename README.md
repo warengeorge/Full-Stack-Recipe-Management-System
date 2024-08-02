@@ -21,3 +21,5 @@ The project can be seen here: https://full-stack-recipe-management-system.vercel
 - Configuration: The app was deployed on render.com using a `render.yaml` file for configuration.
 - Frontend: was deployed on Vercel, and can be seen here: https://full-stack-recipe-management-system.vercel.app/
 - Backend:  was deployed on render.com and can be seen here: https://application-qip5.onrender.com/
+
+## Note: The backend server goes sleep after not been used for a while, so you need to wait a few minutes for the app to do a cold start, after which you can view as you want.
